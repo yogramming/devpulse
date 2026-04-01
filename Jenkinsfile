@@ -13,6 +13,11 @@ pipeline {
 
   stages {
 
+    stage('Install Docker CLI') {
+      steps {
+        sh 'apt-get update && apt-get -y docker.io'
+      }
+    }
     stage('Checkout') {
       steps {
         checkout scm
@@ -30,9 +35,9 @@ pipeline {
         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
           sh '''
           ./mvnw sonar:sonar \
-            -Dsonar.projectKey=devpulse \
-            -Dsonar.host.url=$SONAR_URL \
-            -Dsonar.login=$SONAR_TOKEN
+          -Dsonar.projectKey=devpulse \
+          -Dsonar.host.url=$SONAR_URL \
+          -Dsonar.login=$SONAR_TOKEN
           '''
         }
       }
@@ -62,9 +67,9 @@ pipeline {
           git config user.email "you@example.com"
           git config user.name "yourname"
 
-          sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" k8s/deployment.yml
+          sed -i "s|yogramming/devpulse:.*|yogramming/devpulse:${BUILD_NUMBER}|g" k8s-manifests/deployment.yml
 
-          git add k8s/deployment.yml
+          git add k8s-manifests/deployment.yml
           git commit -m "Update image tag to ${BUILD_NUMBER}"
 
           git push https://${GITHUB_TOKEN}@github.com/yogramming/devpulse.git HEAD:main
