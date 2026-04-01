@@ -8,7 +8,7 @@ pipeline {
 
   environment {
     DOCKER_IMAGE = "yogramming/devpulse:${BUILD_NUMBER}"
-    SONAR_URL = "http://localhost:9000"
+    SONAR_URL = "http://host.docker.internal:9000"
   }
 
   stages {
