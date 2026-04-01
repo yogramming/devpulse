@@ -46,7 +46,7 @@ pipeline {
 
     stage('Push Docker Image') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
           sh '''
           echo $PASS | docker login -u $USER --password-stdin
           docker push ${DOCKER_IMAGE}
@@ -57,7 +57,7 @@ pipeline {
 
     stage('Update K8s Manifest') {
       steps {
-        withCredentials([string(credentialsId: 'github-cred', variable: 'GITHUB_TOKEN')]) {
+        withCredentials([string(credentialsId: 'github-creds', variable: 'GITHUB_TOKEN')]) {
           sh '''
           git config user.email "you@example.com"
           git config user.name "yourname"
