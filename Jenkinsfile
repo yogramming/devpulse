@@ -30,9 +30,9 @@ pipeline {
         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
           sh '''
           ./mvnw sonar:sonar \
-          -Dsonar.projectKey=devpulse \
-          -Dsonar.host.url=$SONAR_URL \
-          -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.projectKey=devpulse \
+            -Dsonar.host.url=$SONAR_URL \
+            -Dsonar.login=$SONAR_TOKEN
           '''
         }
       }
@@ -57,18 +57,20 @@ pipeline {
 
     stage('Update K8s Manifest') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GITHUB_TOKEN')]) {
-          sh '''
-          git config user.email "you@example.com"
-          git config user.name "yourname"
+        dir("${WORKSPACE}") {
+          withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+            sh '''
+            git config user.email "yogramming@devpulse.com"
+            git config user.name "yogramming"
 
-          sed -i "s|yogramming/devpulse:.*|yogramming/devpulse:${BUILD_NUMBER}|g" k8s-manifests/deployment.yml
+            sed -i "s|yogramming/devpulse:.*|yogramming/devpulse:${BUILD_NUMBER}|g" k8s-manifests/deployment.yml
 
-          git add k8s-manifests/deployment.yml
-          git commit -m "Update image tag to ${BUILD_NUMBER}"
+            git add k8s-manifests/deployment.yml
+            git commit -m "Update image tag to ${BUILD_NUMBER}" || echo "No changes to commit"
 
-          git push https://${GITHUB_TOKEN}@github.com/yogramming/devpulse.git HEAD:main
-          '''
+            git push https://${GIT_USER}:${GITHUB_TOKEN}@github.com/yogramming/devpulse.git HEAD:main
+            '''
+          }
         }
       }
     }
