@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'yogramming/devops-agent:v1'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+      args '--user root -v /var/run/docker.sock:/var/run/docker.sock --add-host=host.docker.internal:host-gateway'
     }
   }
 
