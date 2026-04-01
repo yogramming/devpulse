@@ -57,7 +57,7 @@ pipeline {
 
     stage('Update K8s Manifest') {
       steps {
-        withCredentials([string(credentialsId: 'github-creds', variable: 'GITHUB_TOKEN')]) {
+        withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GITHUB_TOKEN')]) {
           sh '''
           git config user.email "you@example.com"
           git config user.name "yourname"
