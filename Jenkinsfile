@@ -7,7 +7,7 @@ pipeline {
   }
 
   environment {
-    DOCKER_IMAGE = "YOUR_DOCKER_USERNAME/devpulse:${BUILD_NUMBER}"
+    DOCKER_IMAGE = "yogramming/devpulse:${BUILD_NUMBER}"
     SONAR_URL = "http://localhost:9000"
   }
 
@@ -67,7 +67,7 @@ pipeline {
           git add k8s/deployment.yml
           git commit -m "Update image tag to ${BUILD_NUMBER}"
 
-          git push https://${GITHUB_TOKEN}@github.com/YOUR_USERNAME/devpulse.git HEAD:main
+          git push https://${GITHUB_TOKEN}@github.com/yogramming/devpulse.git HEAD:main
           '''
         }
       }
