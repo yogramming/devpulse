@@ -10,6 +10,12 @@
   <img src="docs/images/jenkinsDevpulse.png" width="48%" />
 </div>
 
+<div align="center">
+  <img src="docs/images/argocdDevpulse.png" width="48%" />
+  &nbsp;
+  <img src="docs/images/sonarqubeDevpulse.png" width="48%" />
+</div>
+
 ## What is DevPulse?
 
 **DevPulse** is a Spring Boot application that exposes system health metrics and status checks. Beyond the application itself, this project is a full end-to-end DevOps pipeline demonstration — from a developer pushing code to a running, monitored deployment in Kubernetes.
