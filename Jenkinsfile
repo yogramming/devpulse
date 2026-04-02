@@ -30,9 +30,9 @@ pipeline {
         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
           sh '''
           ./mvnw sonar:sonar \
-            -Dsonar.projectKey=devpulse \
-            -Dsonar.host.url=$SONAR_URL \
-            -Dsonar.login=$SONAR_TOKEN
+          -Dsonar.projectKey=devpulse \
+          -Dsonar.host.url=$SONAR_URL \
+          -Dsonar.token=$SONAR_TOKEN
           '''
         }
       }
@@ -57,23 +57,25 @@ pipeline {
 
     stage('Update K8s Manifest') {
       steps {
-        dir("${WORKSPACE}") {
-          withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GITHUB_TOKEN')]) {
-            sh '''
-            git config user.email "yogramming@devpulse.com"
-            git config user.name "yogramming"
+        withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+          sh '''
+          rm -rf devpulse
 
-            sed -i "s|yogramming/devpulse:.*|yogramming/devpulse:${BUILD_NUMBER}|g" k8s-manifests/deployment.yml
+          git clone --depth 1 https://${GIT_USER}:${GITHUB_TOKEN}@github.com/yogramming/devpulse.git
+          cd devpulse
 
-            git add k9s-manifests/deployment.yml
-            git commit -m "Update image tag to ${BUILD_NUMBER}" || echo "No changes to commit"
+          git config user.email "ci@jenkins"
+          git config user.name "JenkinsCI"
 
-            git push https://${GIT_USER}:${GITHUB_TOKEN}@github.com/yogramming/devpulse.git HEAD:main
-            '''
-          }
+          sed -i "s|yogramming/devpulse:.*|yogramming/devpulse:${BUILD_NUMBER}|g" k8s-manifests/deployment.yml
+
+          git add k8s-manifests/deployment.yml
+          git commit -m "Update image tag to ${BUILD_NUMBER}" || echo "No changes"
+
+          git push https://${GIT_USER}:${GITHUB_TOKEN}@github.com/yogramming/devpulse.git HEAD:main
+          '''
         }
       }
     }
-
   }
 }
