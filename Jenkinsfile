@@ -67,7 +67,7 @@ pipeline {
           git config user.email "ci@jenkins"
           git config user.name "JenkinsCI"
 
-          sed -i "s|yogramming/devpulse:.*|yogramming/devpulse:${BUILD_NUMBER}|g" k8s-manifests/deployment.yml
+          sed -i "s|image: yogramming/devpulse:.*|image: yogramming/devpulse:${BUILD_NUMBER}|g" k8s-manifests/deployment.yml
 
           git add k8s-manifests/deployment.yml
           git commit -m "Update image tag to ${BUILD_NUMBER}" || echo "No changes"
