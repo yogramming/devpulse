@@ -65,7 +65,7 @@ pipeline {
 
             sed -i "s|yogramming/devpulse:.*|yogramming/devpulse:${BUILD_NUMBER}|g" k8s-manifests/deployment.yml
 
-            git add k8s-manifests/deployment.yml
+            git add k9s-manifests/deployment.yml
             git commit -m "Update image tag to ${BUILD_NUMBER}" || echo "No changes to commit"
 
             git push https://${GIT_USER}:${GITHUB_TOKEN}@github.com/yogramming/devpulse.git HEAD:main
