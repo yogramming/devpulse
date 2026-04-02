@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: devpulse
-          image: yogramming/devpulse:replaceImageTag
+          image: yogramming/devpulse:15
           ports:
             - containerPort: 8080
           readinessProbe:
